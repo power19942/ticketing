@@ -6,8 +6,7 @@ import { CurrentUserRouter } from './routes/current-user'
 import { SignInRouter } from './routes/signin'
 import { SignUpRouter } from './routes/signup'
 import { SignOutRouter } from './routes/signout'
-import { errorHandler } from './middlewares/error-handler';
-import { NotFoundError } from './errors/not-found-error';
+import { errorHandler,NotFoundError } from '@omjk_ticket/common';
 
 const app = express()
 app.set('trust proxy', true)
