@@ -17,6 +17,7 @@ stan.on('connect', () => {
 
 
   new TicketCreatedListener(stan).listen()
+  // new TicketUpdatedListener(stan).listen()
 
 })
 
