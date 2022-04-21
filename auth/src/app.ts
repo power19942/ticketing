@@ -13,8 +13,10 @@ app.set('trust proxy', true)
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieSession({
-  signed: false,
-  // secure: process.env.NODE_ENV !== 'test'
+  signed: false, // we will store jwt inside the cookie so we dont need the cookie to encrypt the data 
+  //becuse th jwt is already encrypted
+
+  // secure: process.env.NODE_ENV !== 'test' // this mean that the cookie should serve by https
 }))
 
 app.use(CurrentUserRouter)
