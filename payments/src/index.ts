@@ -1,8 +1,16 @@
-import { OrderCreatedListener } from './events/listeners/order-created-listener'
+import mongoose from 'mongoose'
+import { Stan } from 'node-nats-streaming'
 import { natsWrapper } from './nats-wrapper'
+import { app } from './app'
+
 
 const start = async () => {
-  
+  if (!process.env.JWT_KEY) {
+    throw new Error('JWT_KEY not defined')
+  }
+  if (!process.env.MONGO_URI) {
+    throw new Error('MONGO_URI not defined')
+  }
   if (!process.env.NATS_URL) {
     throw new Error('NATS_URL not defined')
   }
@@ -17,8 +25,7 @@ const start = async () => {
     await natsWrapper.connect(
       process.env.NATS_CLUSTER_ID,
       process.env.NATS_CLIENT_ID,
-      process.env.NATS_URL
-    )
+      process.env.NATS_URL)
 
     natsWrapper.client.on('close', () => {
       console.log('NATS connection closed')
@@ -27,13 +34,20 @@ const start = async () => {
     process.on('SIGINT', () => natsWrapper.client.close())
     process.on('SIGTERM', () => natsWrapper.client.close())
 
-
-    new OrderCreatedListener(natsWrapper.client).listen()
-
+   
+    await mongoose.connect(process.env.MONGO_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      useCreateIndex: true
+    })
+    console.log('connected to auth DB')
   } catch (error) {
     console.error(error)
   }
-  console.log('expiration service started')
+
+  app.listen(3000, () => {
+    console.log('listen on port 3000');
+  })
 }
 
 start()
