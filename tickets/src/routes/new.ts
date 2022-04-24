@@ -6,6 +6,10 @@ import { TicketCreatedPublisher } from '../events/publishers/ticket-created-publ
 import { natsWrapper } from '../nats-wrapper'
 const router = Router()
 
+router.get('/api/tickets/test', (req: Request, res: Response) => {
+  res.send('hello')
+});
+
 router.post('/api/tickets', requireAuth, [
   body('title')
     .not()
@@ -25,7 +29,7 @@ router.post('/api/tickets', requireAuth, [
   await ticket.save();
   new TicketCreatedPublisher(natsWrapper.client).publish({
     id: ticket.id,
-    version:ticket.version,
+    version: ticket.version,
     title: ticket.title,
     price: ticket.price,
     userId: ticket.userId

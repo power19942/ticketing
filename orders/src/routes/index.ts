@@ -4,6 +4,10 @@ import { Order } from '../models/order'
 
 const router = Router()
 
+router.get('/api/orders/test', async (req: Request, res: Response) => {
+  res.send(`order test`)
+})
+
 router.get('/api/orders', requireAuth, async (req: Request, res: Response) => {
   const order = await Order.find({
     userId: req.currentUser!.id
